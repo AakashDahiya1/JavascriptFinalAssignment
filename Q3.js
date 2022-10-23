@@ -1,63 +1,55 @@
 class resoruceCaller {
-    
-    
-    apiUrl = "https://reqres.in/api/users";
-    
-    constructor() {
-      this.fetchData();
+    apiUrl;
+    constructor(url) {
+      this.apiUrl = url;
     }
     
-    async fetchData() {
-        fetch(apiUrl)
-        .then(response=>
-            {
-                console.log(response);
-                if(!response.ok)
-                {
-                    throw Error("ERROR");
-                }
-                return response.json();
-        })
-        
-
-    }
-    
-    
-    }
-    
-    class childresourceCaller extends resoruceCaller{
-       constructor()
-       {
-        super(fetchData());
-       } 
-        
-    getData()
+    async fetchapi()
     {
+        try{
+            const response = await fetch(apiUrl);
+            console.log('status code: ', response.status);
+            if(!response.ok){
+                console.log(response);
+                throw new Error(`Error! status: ${response.status}`);
+            }
+            return await response.json();
+        } catch(error){
+            console.log(error);
+        }
+    }  
+    
+    
+}
+    
+ class childresourceCaller extends resoruceCaller{
+    constructor(url)
+    {
+        super(url);
+    } 
         
-        then(data=>{
-            console.log(data.data);
-            const html=data.data
-            .map(user=>
-                {
-                    return `
-                    <div class="user">
-                    <p> Id: ${user.id}</p>
-                    <p> Name: ${user.first_name}</p>
-                    <p> Email: ${user.email}</p>
-                    </div>
-                    `;
-                }).join("");
-            document.querySelector('#Display').
-            insertAdjacentHTML("afterbegin",html);
-        }).catch(error=>
-            {
-                console.log(error);
-            });
+    async renderUsers(){
+        let users = await super.fetchapi();
+        users = users.data;
+        console.log(users);
+        let html ='';
+        users.forEach(user =>{
+            let htmlSegment = `<div class="user">
+                <p> Id: ${user.id}</p>
+                <p> Name: ${user.first_name}</p>
+                <p> Email: ${user.email}</p>
+                </div>`;
+            html += htmlSegment;
+        });
+        let var_users = document.querySelector('.users');
+        var_users.innerHTML = html;
     }
 
-    }
-  
-getData();
+}
+
+let url = 'https://reqres.in/api/users'
+let child = new childresourceCaller(url);
+child.renderUsers();
       
   
   

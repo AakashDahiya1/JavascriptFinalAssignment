@@ -1,33 +1,35 @@
-async function getData()
+async function getUsers()
 {
-    fetch('https://reqres.in/api/users')
-    .then(response=>
-        {
+    let url = 'https://reqres.in/api/users'
+    try{
+        const response = await fetch(url);
+        console.log('status code: ', response.status);
+        if(!response.ok){
             console.log(response);
-            if(!response.ok)
-            {
-                throw Error("ERROR");
-            }
-            return response.json();
-        })
-        .then(data=>{
-            console.log(data.data);
-            const html=data.data
-            .map(user=>
-                {
-                    return `
-                    <div class="user">
-                    <p> Id: ${user.id}</p>
-                    <p> Name: ${user.first_name}</p>
-                    <p> Email: ${user.email}</p>
-                    </div>
-                    `;
-                }).join("");
-            document.querySelector('#Display').
-            insertAdjacentHTML("afterbegin",html);
-        }).catch(error=>
-            {
-                console.log(error);
-            });
+            throw new Error(`Error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error){
+        console.log(error);
+    }
+}   
+async function renderUsers(){
+    let users = await getUsers();
+    users = users.data;
+    console.log(users);
+    let html ='';
+    users.forEach(user =>{
+        let htmlSegment = `<div class="user">
+            <p> Id: ${user.id}</p>
+            <p> Name: ${user.first_name}</p>
+            <p> Email: ${user.email}</p>
+            </div>`;
+        html += htmlSegment;
+    });
+    let var_users = document.querySelector('.users');
+    var_users.innerHTML = html;
 }
-getData();
+
+
+
+renderUsers();
