@@ -28,7 +28,7 @@ function getShape(shape,height,width,radius) {
 };
 
 
-class rectangle extends shap
+class rectangle extends shape
 {
   constructor(height,width){
     super(height,width);

@@ -1,4 +1,4 @@
-async function getUser()
+async function getUsers()
 {
     let url = 'https://reqres.in/api/users'
     try{

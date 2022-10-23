@@ -28,7 +28,7 @@ class resoruceCaller {
         super(url);
     } 
         
-    async renderUser(){
+    async renderUsers(){
         let users = await super.fetchapi();
         users = users.data;
         console.log(users);
